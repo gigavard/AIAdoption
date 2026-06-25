@@ -36,6 +36,11 @@ func NewServer(log *slog.Logger, cfg *config.Config, repo domain.Repository) *Se
 	}
 }
 
+func serveIndex(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "text/html; charset=utf-8")
+	http.ServeFile(w, r, "web/templates/index.html")
+}
+
 func healthHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
