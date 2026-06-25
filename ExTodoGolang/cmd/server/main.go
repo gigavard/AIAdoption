@@ -2,11 +2,9 @@ package main
 
 import (
 	"context"
-	"fmt"
 	"os"
 	"os/signal"
 	"syscall"
-	"time"
 
 	"github.com/gigavard/AIAdoption/ExTodoGolang/internal/config"
 	"github.com/gigavard/AIAdoption/ExTodoGolang/internal/http"
