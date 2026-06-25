@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/gigavard/AIAdoption/ExTodoGolang/internal/config"
+	"github.com/gigavard/AIAdoption/ExTodoGolang/internal/domain"
 )
 
 type Server struct {
@@ -12,16 +13,24 @@ type Server struct {
 	log *slog.Logger
 }
 
-func NewServer(log *slog.Logger, cfg *config.Config) *Server {
+func NewServer(log *slog.Logger, cfg *config.Config, repo domain.Repository) *Server {
 	mux := http.NewServeMux()
 
-	// Routes will be added in SPEC-003
+	mux.HandleFunc("GET /", serveIndex)
+	mux.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("web/public/static"))))
+
+	// Health check
 	mux.HandleFunc("/health", healthHandler)
+
+	// Handler routes
+	handler := NewHandler(log, repo)
+	handler.RegisterRoutes(mux)
 
 	return &Server{
 		Server: &http.Server{
-			Addr:    cfg.HTTPAddr,
-			Handler: mux,
+			Addr:              cfg.HTTPAddr,
+			Handler:           mux,
+			ReadHeaderTimeout: cfg.ReadHeaderTimeout,
 		},
 		log: log,
 	}

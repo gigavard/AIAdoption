@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todo App</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100">
+    <div class="min-h-screen py-8 px-4">
+        <div class="max-w-2xl mx-auto">
+            <div class="bg-white rounded-lg shadow-lg p-8">
+                <h1 class="text-4xl font-bold text-gray-800 mb-8">My Todos</h1>
+
+                <!-- Create Todo Form -->
+                <div class="mb-8">
+                    <div class="flex gap-2">
+                        <input 
+                            type="text" 
+                            id="todoTitle" 
+                            placeholder="Add a new todo..." 
+                            class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        >
+                        <input 
+                            type="text" 
+                            id="todoContent" 
+                            placeholder="Description (optional)" 
+                            class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        >
+                        <button 
+                            id="addTodoBtn" 
+                            class="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
+                        >
+                            Add
+                        </button>
+                    </div>
+                    <p id="errorMsg" class="text-red-500 mt-2 hidden"></p>
+                </div>
+
+                <!-- Todos List -->
+                <div id="todosList" class="space-y-2">
+                    <!-- Todos will be rendered here -->
+                </div>
+
+                <!-- Empty State -->
+                <div id="emptyState" class="text-center py-8 text-gray-500">
+                    No todos yet. Add one to get started!
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/static/app.js"></script>
+</body>
+</html>

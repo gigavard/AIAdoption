@@ -7,13 +7,15 @@ import (
 
 	"github.com/gigavard/AIAdoption/ExTodoGolang/internal/config"
 	"github.com/gigavard/AIAdoption/ExTodoGolang/internal/http"
+	"github.com/gigavard/AIAdoption/ExTodoGolang/internal/storage"
 	"github.com/gigavard/AIAdoption/ExTodoGolang/pkg/logger"
 )
 
 func TestHealthEndpoint(t *testing.T) {
 	log := logger.New()
 	cfg := &config.Config{HTTPAddr: ":8080"}
-	server := http.NewServer(log, cfg)
+	repo, _ := storage.NewSQLiteRepository(":memory:")
+	server := http.NewServer(log, cfg, repo)
 
 	req := httptest.NewRequest("GET", "/health", nil)
 	w := httptest.NewRecorder()

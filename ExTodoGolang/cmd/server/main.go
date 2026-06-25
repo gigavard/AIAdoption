@@ -10,6 +10,7 @@ import (
 
 	"github.com/gigavard/AIAdoption/ExTodoGolang/internal/config"
 	"github.com/gigavard/AIAdoption/ExTodoGolang/internal/http"
+	"github.com/gigavard/AIAdoption/ExTodoGolang/internal/storage"
 	"github.com/gigavard/AIAdoption/ExTodoGolang/pkg/logger"
 )
 
@@ -19,8 +20,16 @@ func main() {
 	cfg := config.Load()
 	log.Info("Starting Todo App", "version", "0.1.0", "env", cfg.Environment)
 
-	// HTTP server setup (will be completed in SPEC-003)
-	server := http.NewServer(log, cfg)
+	// Initialize repository
+	repo, err := storage.NewSQLiteRepository(cfg.DBPath)
+	if err != nil {
+		log.Error("Failed to initialize database", "err", err)
+		os.Exit(1)
+	}
+	defer repo.Close()
+
+	// HTTP server setup
+	server := http.NewServer(log, cfg, repo)
 
 	// Graceful shutdown (SPEC-007)
 	sigChan := make(chan os.Signal, 1)
@@ -41,7 +50,7 @@ func main() {
 		}
 	case sig := <-sigChan:
 		log.Info("Received signal", "signal", sig.String())
-		ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+		ctx, cancel := context.WithTimeout(context.Background(), cfg.ShutdownTimeout)
 		defer cancel()
 
 		if err := server.Shutdown(ctx); err != nil {
